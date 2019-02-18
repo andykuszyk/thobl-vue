@@ -1,18 +1,31 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Obl v-for="obl in obls" 
+        v-bind:radius="obl.radius" 
+        v-bind:left="obl.left" 
+        v-bind:top="obl.top"
+        v-bind:label="obl.label"
+        />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Obl from './components/Obl.vue'
 
 export default {
-  name: 'app',
-  components: {
-    HelloWorld
-  }
+    name: 'app',
+    data() {
+        return {
+            obls: [  
+                { radius: 100, left: 10, top: 10, label: "small" },
+                { radius: 200, left: 100, top: 100, label: "medium" },
+                { radius: 300, left: 200, top: 200, label: "ellipse" },
+            ]
+        }
+    },
+    components: {
+        Obl 
+    }
 }
 </script>
 
