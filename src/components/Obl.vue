@@ -2,6 +2,7 @@
     <div class="obl-outside"
          v-on:mouseover="onMouseOver"
          v-on:mouseout="onMouseOut"
+         v-on:mouseup="onMouseUp"
          v-bind:style="{ 
             width: radius * 2 + 'px', 
             height: radius * 2 + 'px', 
@@ -30,6 +31,10 @@ export default {
         return {
             borderSize: 10,
             highlightColour: 'black',
+            isDragging: false,
+            isActive: false,
+            mouseOffsetX: null,
+            mouseOffsetY: null,
         }
     },
     methods: {
@@ -38,6 +43,26 @@ export default {
         },
         onMouseOut: function(event) {
             this.highlightColour = 'black';
+        },
+        onMouseMove: function(event) {
+            if(!this.isDragging) return;
+            if(this.mouseOffsetX == null && this.mouseOffsetY == null) {
+                this.mouseOffsetX = event.pageX - this.left;
+                this.mouseOffsetY = event.pageY - this.top;
+            }
+            this.left = event.pageX - this.mouseOffsetX;
+            this.top = event.pageY - this.mouseOffsetY;
+        },
+        onMouseUp: function(event) {
+            this.mouseOffsetX = null;
+            this.mouseOffsetY = null;
+        },
+        isOver: function(x, y) {
+            if(x < this.left) return false;
+            if(y < this.top) return false;
+            if(x > this.left + this.radius * 2) return false;
+            if(y > this.top + this.radius * 2) return false;
+            return true;
         }
     },
     props: ['radius', 'left', 'top', 'label' ],
