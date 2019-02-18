@@ -17,9 +17,6 @@ export default {
     data() {
         return {
             obls: [ 
-                // Need to bind <Obl> to the objects directly, or get
-                // a reference to them, so that we can invoke instance
-                // methods in event handlers below.
                 { radius: 100, left: 10, top: 10, label: "small" },
                 { radius: 200, left: 100, top: 100, label: "medium" },
                 { radius: 300, left: 200, top: 200, label: "ellipse" },
@@ -28,18 +25,18 @@ export default {
     },
     methods: {
         onMouseUp: function(event) {
-            for(let obl of this.obls) {
+            for(let obl of this.$children) {
                 obl.isDragging = false;
             }
         },
         onMouseMove: function(event) {
-            for(let obl of this.obls) {
+            for(let obl of this.$children) {
                 if(!obl.isDragging) continue;
                 obl.onMouseMove(event);
             }
         },
         onMouseDown: function(event) {
-            for(let obl of this.obls) {
+            for(let obl of this.$children) {
                 if(obl.isOver(event.pageX, event.pageY)) {
                     obl.isSelected = true;
                     obl.isDragging = true;
