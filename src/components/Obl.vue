@@ -1,10 +1,13 @@
 <template>
     <div class="obl-outside"
+         v-on:mouseover="onMouseOver"
+         v-on:mouseout="onMouseOut"
          v-bind:style="{ 
             width: radius * 2 + 'px', 
             height: radius * 2 + 'px', 
             left: left + 'px', 
-            top: top + 'px' 
+            top: top + 'px',
+            background: highlightColour,
         }">
         <div class="obl-inside"
              v-bind:style="{
@@ -26,6 +29,15 @@ export default {
     data() {
         return {
             borderSize: 10,
+            highlightColour: 'black',
+        }
+    },
+    methods: {
+        onMouseOver: function(event) {
+            this.highlightColour = 'gray';
+        },
+        onMouseOut: function(event) {
+            this.highlightColour = 'black';
         }
     },
     props: ['radius', 'left', 'top', 'label' ],
@@ -36,7 +48,6 @@ export default {
 .obl-outside {
     position: absolute;
     border-radius: 50%;
-    background: black;
 }
 .obl-inside {
     position: absolute;
