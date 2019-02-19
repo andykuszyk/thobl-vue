@@ -30,7 +30,7 @@ export default {
     data() {
         return {
             borderSize: 10,
-            highlightColour: 'black',
+            highlightColour: 'white',
             isDragging: false,
             isActive: false,
             mouseOffsetX: null,
@@ -38,11 +38,19 @@ export default {
         }
     },
     methods: {
+        select: function() {
+            this.isActive = true;
+        },
+        deselect: function() {
+            console.log('deselecting!');
+            this.isActive = false;
+            this.highlightColour = 'white';
+        },
         onMouseOver: function(event) {
-            this.highlightColour = 'gray';
+            this.highlightColour = 'blue';
         },
         onMouseOut: function(event) {
-            this.highlightColour = 'black';
+            if(!this.isActive) this.highlightColour = 'white';
         },
         onMouseMove: function(event) {
             if(!this.isDragging) return;
@@ -76,10 +84,11 @@ export default {
 }
 .obl-inside {
     position: absolute;
-    background: white;
+    background: black;
     border-radius: 50%;
 }
 .obl-contents {
+    color: white;
     position: relative;
     top: 50%;
     transform: translateY(-50%);

@@ -38,8 +38,10 @@ export default {
         onMouseDown: function(event) {
             for(let obl of this.$children) {
                 if(obl.isOver(event.pageX, event.pageY)) {
-                    obl.isSelected = true;
                     obl.isDragging = true;
+                    obl.select();
+                } else {
+                    obl.deselect();
                 }
             }
         },
@@ -51,6 +53,9 @@ export default {
 </script>
 
 <style>
+body {
+    background: black;
+}
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -58,5 +63,11 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: -1;
 }
 </style>
