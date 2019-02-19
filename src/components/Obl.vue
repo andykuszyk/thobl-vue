@@ -3,6 +3,7 @@
          v-on:mouseover="onMouseOver"
          v-on:mouseout="onMouseOut"
          v-on:mouseup="onMouseUp"
+         v-on:wheel="onWheel"
          v-bind:style="{ 
             width: radius * 2 + 'px', 
             height: radius * 2 + 'px', 
@@ -45,6 +46,14 @@ export default {
             console.log('deselecting!');
             this.isActive = false;
             this.highlightColour = 'white';
+        },
+        onWheel: function(event) {
+            if(event.deltaY < 0) {
+                this.radius -= 5;
+            } else {
+                this.radius += 5;
+            }
+            event.stopPropogation();
         },
         onMouseOver: function(event) {
             this.highlightColour = 'blue';
