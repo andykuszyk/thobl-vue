@@ -1,7 +1,7 @@
 <template>
   <div id="app" v-on:mousemove="onMouseMove" v-on:mouseup="onMouseUp" v-on:mousedown="onMouseDown">
     <Obl v-for="obl in obls" 
-        v-bind:radius="obl.radius" 
+        v-bind:initialRadius="obl.radius" 
         v-bind:left="obl.left" 
         v-bind:top="obl.top"
         v-bind:label="obl.label"

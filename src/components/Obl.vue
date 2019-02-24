@@ -17,10 +17,21 @@
                 height: radius * 2 - borderSize + 'px',
                 left: borderSize / 2 + 'px',
                 top: borderSize / 2 + 'px',
-                fontSize: radius * 2 + '%',
             }">
-            <div class="obl-contents">
-                <span>{{ label }}</span>
+            <div class="obl-contents" v-on:mousedown="onMouseDown">
+                <span v-if="!isEditing" v-bind:style="{fontSize: radius * 2 + '%'}">{{ labelText }}</span>
+                <input v-if="isEditing" 
+                       type="text" 
+                       v-bind:style="{
+                           width: (radius * 2 - borderSize * 2) * 0.9 + 'px',
+                           fontSize: radius * 2 + '%',
+                           textAlign: 'center',
+                           background: 'transparent',
+                           color: 'white'
+                       }" 
+                       v-on:keydown="onKeydown"
+                       v-model="labelText"
+                       >
             </div>
         </div>
     </div>
@@ -41,9 +52,12 @@ export default {
             mouseOffsetX: null,
             mouseOffsetY: null,
             scaleAmount: 5,
+            isEditing: false,
+            labelText: this.label,
+            radius: this.initialRadius
         }
     },
-    props: ['radius', 'left', 'top', 'label' ],
+    props: ['initialRadius', 'left', 'top', 'label' ],
     methods: {
         select: function() {
             this.isActive = true;
@@ -53,6 +67,7 @@ export default {
         deselect: function() {
             this.isActive = false;
             this.highlightColour = 'white';
+            this.isEditing = false;
         },
         onWheel: function(event) {
             if(event.deltaY < 0) {
@@ -65,7 +80,7 @@ export default {
                 this.y -= this.scaleAmount;
 
             }
-            event.stopPropogation();
+            event.stopPropagation();
         },
         onMouseOver: function(event) {
             this.highlightColour = 'blue';
@@ -99,8 +114,17 @@ export default {
             if(x > this.getAbsolutePosition().x + this.radius * 2) return false;
             if(y > this.getAbsolutePosition().y + this.radius * 2) return false;
             return true;
-        }
-    },
+        },
+        onMouseDown: function(event) {
+            console.log('mouse down!');
+            this.isEditing = true;
+        },
+        onKeydown: function(event) {
+            if(event.key == "Enter" || event.key == "Escape") {
+                this.isEditing = false;
+            }
+        },
+    }
 }
 </script>
 
