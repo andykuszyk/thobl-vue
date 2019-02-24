@@ -57,12 +57,12 @@ export default {
         onWheel: function(event) {
             if(event.deltaY < 0) {
                 this.radius -= this.scaleAmount;
-                this.x += this.scaleAmount / 2;
-                this.y += this.scaleAmount / 2;
+                this.x += this.scaleAmount;
+                this.y += this.scaleAmount;
             } else {
                 this.radius += this.scaleAmount;
-                this.x -= this.scaleAmount / 2;
-                this.y -= this.scaleAmount / 2;
+                this.x -= this.scaleAmount;
+                this.y -= this.scaleAmount;
 
             }
             event.stopPropogation();
