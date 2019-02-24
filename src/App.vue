@@ -1,5 +1,10 @@
 <template>
-  <div id="app" v-on:mousemove="onMouseMove" v-on:mouseup="onMouseUp" v-on:mousedown="onMouseDown">
+  <div id="app" 
+       v-on:mousemove="onMouseMove" 
+       v-on:mouseup="onMouseUp" 
+       v-on:mousedown="onMouseDown" 
+       v-on:dblclick="onMouseDoubleClick"
+       >
     <Obl v-for="obl in obls" 
         v-bind:initialRadius="obl.radius" 
         v-bind:left="obl.left" 
@@ -29,6 +34,17 @@ export default {
         }
     },
     methods: {
+        onMouseDoubleClick: function(event) {
+            for(let obl of this.$children) {
+                if(obl.isOver(event.pageX, event.pageY)) return;
+            }
+            this.obls.push({
+                radius: 200,
+                left: event.pageX - 200,
+                top: event.pageY - 200,
+                label: 'New Obl',
+            });
+        },
         onMouseUp: function(event) {
             for(let obl of this.$children) {
                 obl.isDragging = false;

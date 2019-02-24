@@ -68,6 +68,7 @@ export default {
             this.isActive = false;
             this.highlightColour = 'white';
             this.isEditing = false;
+            if(this.labelText == '') this.labelText = 'Obl';
         },
         onWheel: function(event) {
             if(event.deltaY < 0) {
@@ -122,6 +123,7 @@ export default {
         onKeydown: function(event) {
             if(event.key == "Enter" || event.key == "Escape") {
                 this.isEditing = false;
+                if(this.labelText == '') this.labelText = 'Obl';
             }
         },
     }
