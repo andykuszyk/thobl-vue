@@ -7,8 +7,8 @@
          v-bind:style="{ 
             width: radius * 2 + 'px', 
             height: radius * 2 + 'px', 
-            left: left + 'px', 
-            top: top + 'px',
+            left: originX + x + 'px', 
+            top: originY + y + 'px',
             background: highlightColour,
         }">
         <div class="obl-inside"
@@ -30,6 +30,10 @@
 export default {
     data() {
         return {
+            x: this.left,
+            y: this.top,
+            originX: 0,
+            originY: 0,
             borderSize: 10,
             highlightColour: 'white',
             isDragging: false,
@@ -38,12 +42,14 @@ export default {
             mouseOffsetY: null,
         }
     },
+    props: ['radius', 'left', 'top', 'label' ],
     methods: {
         select: function() {
             this.isActive = true;
+            this.mouseOffsetX = null;
+            this.mouseOffsetY = null;
         },
         deselect: function() {
-            console.log('deselecting!');
             this.isActive = false;
             this.highlightColour = 'white';
         },
@@ -61,28 +67,34 @@ export default {
         onMouseOut: function(event) {
             if(!this.isActive) this.highlightColour = 'white';
         },
+        getAbsolutePosition() {
+            return {
+                x: this.x + this.originX,
+                y: this.y + this.originY
+            }
+        },
         onMouseMove: function(event) {
             if(!this.isDragging) return;
             if(this.mouseOffsetX == null && this.mouseOffsetY == null) {
-                this.mouseOffsetX = event.pageX - this.left;
-                this.mouseOffsetY = event.pageY - this.top;
+                this.mouseOffsetX = event.pageX - this.getAbsolutePosition().x;
+                this.mouseOffsetY = event.pageY - this.getAbsolutePosition().y;
             }
-            this.left = event.pageX - this.mouseOffsetX;
-            this.top = event.pageY - this.mouseOffsetY;
+            console.log('(' + this.mouseOffsetX + ', ' + this.mouseOffsetY + ')');
+            this.x = event.pageX - this.mouseOffsetX - this.originX;
+            this.y = event.pageY - this.mouseOffsetY - this.originY;
         },
         onMouseUp: function(event) {
             this.mouseOffsetX = null;
             this.mouseOffsetY = null;
         },
         isOver: function(x, y) {
-            if(x < this.left) return false;
-            if(y < this.top) return false;
-            if(x > this.left + this.radius * 2) return false;
-            if(y > this.top + this.radius * 2) return false;
+            if(x < this.getAbsolutePosition().x) return false;
+            if(y < this.getAbsolutePosition().y) return false;
+            if(x > this.getAbsolutePosition().x + this.radius * 2) return false;
+            if(y > this.getAbsolutePosition().y + this.radius * 2) return false;
             return true;
         }
     },
-    props: ['radius', 'left', 'top', 'label' ],
 }
 </script>
 

@@ -16,6 +16,11 @@ export default {
     name: 'app',
     data() {
         return {
+            isCanvasSelected: false,
+            origin: {
+                x: 0,
+                y: 0
+            },
             obls: [ 
                 { radius: 100, left: 10, top: 10, label: "small" },
                 { radius: 200, left: 100, top: 100, label: "medium" },
@@ -28,22 +33,36 @@ export default {
             for(let obl of this.$children) {
                 obl.isDragging = false;
             }
+            this.isCanvasSelected = false;
         },
         onMouseMove: function(event) {
-            for(let obl of this.$children) {
-                if(!obl.isDragging) continue;
-                obl.onMouseMove(event);
+            if(this.isCanvasSelected) {
+                this.origin.x += event.movementX;
+                this.origin.y += event.movementY;
+                for(let obl of this.$children) {
+                    obl.originX = this.origin.x;
+                    obl.originY = this.origin.y;
+                }
+            } else {
+                for(let obl of this.$children) {
+                    if(!obl.isDragging) continue;
+                    obl.onMouseMove(event);
+                }
             }
         },
         onMouseDown: function(event) {
+            let isOblSelected = false;
             for(let obl of this.$children) {
                 if(obl.isOver(event.pageX, event.pageY)) {
                     obl.isDragging = true;
+                    isOblSelected = true;
                     obl.select();
                 } else {
                     obl.deselect();
                 }
             }
+            if(isOblSelected) return;
+            this.isCanvasSelected = true;
         },
     },
     components: {
@@ -57,17 +76,13 @@ body {
     background: black;
 }
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-  width: 100vw;
-  height: 100vh;
   position: absolute;
   left: 0;
   top: 0;
+  right: 0;
+  bottom: 0;
   z-index: -1;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 </style>
