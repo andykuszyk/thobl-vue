@@ -40,6 +40,7 @@ export default {
             isActive: false,
             mouseOffsetX: null,
             mouseOffsetY: null,
+            scaleAmount: 5,
         }
     },
     props: ['radius', 'left', 'top', 'label' ],
@@ -55,9 +56,14 @@ export default {
         },
         onWheel: function(event) {
             if(event.deltaY < 0) {
-                this.radius -= 5;
+                this.radius -= this.scaleAmount;
+                this.x += this.scaleAmount / 2;
+                this.y += this.scaleAmount / 2;
             } else {
-                this.radius += 5;
+                this.radius += this.scaleAmount;
+                this.x -= this.scaleAmount / 2;
+                this.y -= this.scaleAmount / 2;
+
             }
             event.stopPropogation();
         },
