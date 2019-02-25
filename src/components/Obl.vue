@@ -57,7 +57,7 @@ export default {
             radius: this.initialRadius
         }
     },
-    props: ['initialRadius', 'left', 'top', 'label' ],
+    props: ['initialRadius', 'left', 'top', 'label', 'id'],
     methods: {
         select: function() {
             this.isActive = true;
@@ -101,7 +101,6 @@ export default {
                 this.mouseOffsetX = event.pageX - this.getAbsolutePosition().x;
                 this.mouseOffsetY = event.pageY - this.getAbsolutePosition().y;
             }
-            console.log('(' + this.mouseOffsetX + ', ' + this.mouseOffsetY + ')');
             this.x = event.pageX - this.mouseOffsetX - this.originX;
             this.y = event.pageY - this.mouseOffsetY - this.originY;
         },
@@ -117,7 +116,6 @@ export default {
             return true;
         },
         onMouseDown: function(event) {
-            console.log('mouse down!');
             this.isEditing = true;
         },
         onKeydown: function(event) {
