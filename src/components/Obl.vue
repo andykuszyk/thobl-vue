@@ -1,5 +1,6 @@
 <template>
     <div class="obl-outside"
+         v-if="!isDeleted"
          v-on:mouseover="onMouseOver"
          v-on:mouseout="onMouseOut"
          v-on:mouseup="onMouseUp"
@@ -11,6 +12,17 @@
             top: originY + y + 'px',
             background: highlightColour,
         }">
+        <div class="obl-delete"
+             v-if="isActive"
+             v-on:mousedown="onDelete"
+             v-bind:style="{
+                width: 35 + 'px',
+                height: 35 + 'px',
+                left: deleteCoords.x + 'px',
+                top: deleteCoords.y + 'px',
+            }">
+            <b>x</b>
+        </div>
         <div class="obl-inside"
              v-bind:style="{
                 width: radius * 2 - borderSize + 'px',
@@ -54,21 +66,34 @@ export default {
             scaleAmount: 5,
             isEditing: false,
             labelText: this.label,
-            radius: this.initialRadius
+            radius: this.initialRadius,
+            isDeleted: false,
+            deleteCoords: { x: 0, y: 0 },
         }
     },
     props: ['initialRadius', 'left', 'top', 'label', 'id'],
     methods: {
+        onDelete: function(event) {
+            this.isDeleted = true;
+        },
         select: function() {
             this.isActive = true;
             this.mouseOffsetX = null;
             this.mouseOffsetY = null;
+            this.calculateOrbitalCoordinates();
         },
         deselect: function() {
             this.isActive = false;
             this.highlightColour = 'white';
             this.isEditing = false;
             if(this.labelText == '') this.labelText = 'Obl';
+        },
+        calculateOrbitalCoordinates: function() {
+            this.deleteCoords = {
+                x: Math.cos(Math.PI / 4) * this.radius + this.radius,
+                y: this.radius - Math.sin(Math.PI / 4) * this.radius
+            };
+
         },
         onWheel: function(event) {
             if(event.deltaY < 0) {
@@ -81,6 +106,7 @@ export default {
                 this.y -= this.scaleAmount;
 
             }
+            this.calculateOrbitalCoordinates();
             event.stopPropagation();
         },
         onMouseOver: function(event) {
@@ -109,11 +135,19 @@ export default {
             this.mouseOffsetY = null;
         },
         isOver: function(x, y) {
-            if(x < this.getAbsolutePosition().x) return false;
-            if(y < this.getAbsolutePosition().y) return false;
-            if(x > this.getAbsolutePosition().x + this.radius * 2) return false;
-            if(y > this.getAbsolutePosition().y + this.radius * 2) return false;
-            return true;
+            let center = {
+                x: this.getAbsolutePosition().x + this.radius,
+                y: this.getAbsolutePosition().y + this.radius
+            }
+            /*
+                          +-#
+                         # \|  #
+                        #   x   #
+                         #     #
+                            #
+            */
+            let hypoteneuse = Math.sqrt((center.x - x) ** 2 + (center.y - y) ** 2);
+            return hypoteneuse <= this.radius;
         },
         onMouseDown: function(event) {
             this.isEditing = true;
@@ -132,13 +166,24 @@ export default {
 .obl-outside {
     position: absolute;
     border-radius: 50%;
+    z-index: 0;
+}
+.obl-delete {
+    position: absolute;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    z-index: 2;
 }
 .obl-inside {
     position: absolute;
     background: black;
     border-radius: 50%;
+    z-index: 1;
 }
 .obl-contents {
+    z-index: 2;
     color: white;
     position: relative;
     top: 50%;

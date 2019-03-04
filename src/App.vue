@@ -1,51 +1,18 @@
 <template>
-  <div id="app" 
-       v-on:mousemove="onMouseMove" 
-       v-on:mouseup="onMouseUp" 
-       v-on:mousedown="onMouseDown" 
-       v-on:dblclick="onMouseDoubleClick"
-       >
-    <Obl v-for="obl in obls" 
-        v-bind:initialRadius="obl.radius" 
-        v-bind:left="obl.left" 
-        v-bind:top="obl.top"
-        v-bind:label="obl.label"
-        v-bind:id="obl.id"
-        />
-    <div id="toolbar">
-        <div>
-            <svg v-on:mousedown="onRemoveMouseDown" v-if="isRemoveEnabled" width="64" height="64" xmlns="http://www.w3.org/2000/svg">
-             <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->
-             <g>
-              <title>background</title>
-              <rect fill="none" id="canvas_background" height="66" width="66" y="-1" x="-1"/>
-              <g display="none" overflow="visible" y="0" x="0" height="100%" width="100%" id="canvasGrid">
-               <rect fill="url(#gridpattern)" stroke-width="0" y="0" x="0" height="100%" width="100%"/>
-              </g>
-             </g>
-             <g>
-              <title>Layer 1</title>
-              <ellipse stroke="#ff0000" ry="30" rx="30" id="svg_4" cy="32.322763" cx="32.374996" stroke-width="1.5" fill="#ff0000"/>
-              <text transform="rotate(-45 31.35941314697265,31.88277626037597) " xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="101" id="svg_5" y="67.041834" x="1.875129" stroke-width="0" stroke="#ff0000" fill="#ffffff">+</text>
-             </g>
-            </svg>
-            <svg v-if="!isRemoveEnabled" width="64" height="64" xmlns="http://www.w3.org/2000/svg">
-             <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->
-             <g>
-              <title>background</title>
-              <rect fill="none" id="canvas_background" height="66" width="66" y="-1" x="-1"/>
-              <g display="none" overflow="visible" y="0" x="0" height="100%" width="100%" id="canvasGrid">
-               <rect fill="url(#gridpattern)" stroke-width="0" y="0" x="0" height="100%" width="100%"/>
-              </g>
-             </g>
-             <g>
-              <title>Layer 1</title>
-              <ellipse stroke="#b2b2b2" ry="30" rx="30" id="svg_4" cy="32.322763" cx="32.374996" stroke-width="1.5" fill="#b2b2b2"/>
-              <text style="cursor: move;" transform="rotate(-45 31.359374999999993,31.882812500000004) " xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="101" id="svg_5" y="67.041834" x="1.875129" stroke-width="0" stroke="#ff0000" fill="#ffffff">+</text>
-             </g>
-            </svg>
+    <div id="app"
+         v-on:mousemove="onMouseMove" 
+         v-on:mouseup="onMouseUp" 
+         v-on:mousedown="onMouseDown" 
+         v-on:dblclick="onMouseDoubleClick"
+         >
+        <Obl v-for="obl in obls" 
+            v-bind:initialRadius="obl.radius" 
+            v-bind:left="obl.left" 
+            v-bind:top="obl.top"
+            v-bind:label="obl.label"
+            v-bind:id="obl.id"
+            />
         </div>
-    </div>
   </div>
 </template>
 
@@ -124,11 +91,16 @@ export default {
             this.isRemoveEnabled = false;
         },
         onRemoveMouseDown: function(event) {
+            let oblsToRemove = []
             for(let obl of this.$children) {
                 if(!obl.isActive) continue;
-                let model = this.obls.filter(o => o.id == obl.id);
-                this.obls.splice(this.obls.indexOf(model, 0), 1);
+                let model = this.obls.find(o => o.id == obl.id);
+                if(model == null) continue;
+                oblsToRemove.push(model);
             }
+
+            if(oblsToRemove.length == 0) return;
+            this.obls = this.obls.filter(o => !oblsToRemove.includes(o));
         },
     },
     components: {
@@ -151,13 +123,7 @@ body {
   overflow-x: hidden;
   overflow-y: hidden;
 }
-#toolbar {
-    position: absolute;
-    right: 0px;
-    top: 0px;
-    bottom: 0px;
-    width: 70px;
-    background: white;
-    opacity: 0.5;
+.toolbar-button {
+    opacity: 1;
 }
 </style>
