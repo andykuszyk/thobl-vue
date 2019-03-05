@@ -16,12 +16,12 @@
              v-if="isActive"
              v-on:mousedown="onDelete"
              v-bind:style="{
-                width: 35 + 'px',
-                height: 35 + 'px',
                 left: deleteCoords.x + 'px',
                 top: deleteCoords.y + 'px',
             }">
-            <b>x</b>
+            <div class="obl-delete-inside">
+                <div class="obl-contents"><b>x</b></div>
+            </div>
         </div>
         <div class="obl-inside"
              v-bind:style="{
@@ -170,11 +170,25 @@ export default {
 }
 .obl-delete {
     position: absolute;
-    background: red;
+    background: gray;
     color: white;
     border-radius: 50%;
-    text-align: center;
     z-index: 2;
+    width: 35px;
+    height: 35px;
+}
+.obl-delete:hover {
+    background: red;
+}
+.obl-delete-inside {
+    position: absolute;
+    background: black;
+    border-radius: 50%;
+    text-align: center;
+    width: 29px;
+    height: 29px;
+    left: 3px;
+    top: 3px;
 }
 .obl-inside {
     position: absolute;
@@ -190,6 +204,7 @@ export default {
     transform: translateY(-50%);
     text-align: center;
     user-select: none;
+    font-family: sans-serif
 }
 </style>
 
