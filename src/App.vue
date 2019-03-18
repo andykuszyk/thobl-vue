@@ -5,12 +5,13 @@
          v-on:mousedown="onMouseDown" 
          v-on:dblclick="onMouseDoubleClick"
          >
-        <Obl v-for="obl in obls" 
+        <Obl v-for="obl in obls" :key="obl.id"
             v-bind:initialRadius="obl.radius" 
             v-bind:left="obl.left" 
             v-bind:top="obl.top"
             v-bind:label="obl.label"
             v-bind:id="obl.id"
+            v-bind:dblClickCallback="onMouseDoubleClick"
             />
         </div>
   </div>
@@ -37,9 +38,20 @@ export default {
         }
     },
     methods: {
+        getChildren: function(id) {
+            return [
+                { id: 4, radius: 100, left: 100, top: 100, label: 'four'},
+                { id: 5, radius: 100, left: 300, top: 300, label: 'five'},
+                { id: 6, radius: 100, left: 500, top: 500, label: 'six'},
+            ];
+        },
         onMouseDoubleClick: function(event) {
             for(let obl of this.$children) {
-                if(obl.isOver(event.pageX, event.pageY)) return;
+                if(obl.isOver(event.pageX, event.pageY)) {
+                    console.log('Double clicked on obl!');
+                    this.obls = this.getChildren(obl.id);
+                    return;
+                }
             }
             this.obls.push({
                 radius: 200,
