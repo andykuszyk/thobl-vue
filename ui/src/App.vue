@@ -48,7 +48,6 @@ export default {
         onMouseDoubleClick: function(event) {
             for(let obl of this.$children) {
                 if(obl.isOver(event.pageX, event.pageY)) {
-                    console.log('Double clicked on obl!');
                     this.obls = this.getChildren(obl.id);
                     return;
                 }
