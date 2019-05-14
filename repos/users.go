@@ -18,9 +18,9 @@ func (r *UsersPostgresRepo) GetByUsername(username string) (*models.User, error)
 }
 
 type UsersRepoMock struct {
-	getByUsernameFunc func(username string) (*models.User, error)
+	GetByUsernameFunc func(username string) (*models.User, error)
 }
 
 func (r *UsersRepoMock) GetByUsername(username string) (*models.User, error) {
-	return r.getByUsernameFunc(username)
+	return r.GetByUsernameFunc(username)
 }

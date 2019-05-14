@@ -2,6 +2,9 @@ package handlers
 
 import (
 	"net/http"
+	"encoding/json"
+
+	"github.com/andykuszyk/thobl/models"
 )
 
 func (h *handler) postUsersHandler(w http.ResponseWriter, r *http.Request) {
@@ -9,5 +12,20 @@ func (h *handler) postUsersHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *handler) postUsersAuthenticateHandler(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusNotFound)
+	requestUser := models.User{}
+	err := json.NewDecoder(r.Body).Decode(&requestUser)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	user, err := h.UsersRepo.GetByUsername(requestUser.Username)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	if user == nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	w.WriteHeader(http.StatusCreated)
 }
