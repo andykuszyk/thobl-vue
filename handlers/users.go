@@ -27,5 +27,18 @@ func (h *handler) postUsersAuthenticateHandler(w http.ResponseWriter, r *http.Re
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
+	userToken := models.UserToken {
+		Token: "foo",
+	}
+	bytes, err := json.Marshal(userToken)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 	w.WriteHeader(http.StatusCreated)
+	_, err = w.Write(bytes)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 }
