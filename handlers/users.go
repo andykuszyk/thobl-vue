@@ -27,6 +27,10 @@ func (h *handler) postUsersAuthenticateHandler(w http.ResponseWriter, r *http.Re
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
+	if user.Password != requestUser.Password {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 	userToken := models.UserToken {
 		Token: "foo",
 	}
