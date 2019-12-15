@@ -1,3 +1,5 @@
+default: test
+
 watch:
 	find . | grep -v .git | entr -c make test
 
